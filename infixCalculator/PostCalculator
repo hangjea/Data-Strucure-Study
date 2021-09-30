@@ -1,0 +1,45 @@
+#include <string.h>
+#include <ctype.h>
+#include "ListBaseStack.h"
+
+int EvalRPNExp(char exp[])
+{
+	Stack stack;
+	int expLen = strlen(exp);
+	int i;
+	char tok, op1, op2;
+
+	StackInit(&stack); //스택 리셋
+
+	for(i=0; i<expLen; i++) //배열의 끝까지 반복
+	{
+		tok = exp[i]; //현재 배열에 있는 문자 하나 tok에 저장
+
+		if(isdigit(tok)) // 숫자면
+		{
+			SPush(&stack, tok - '0');     // 숫자로 변환하여 집어넣음
+		}
+		else
+		{
+			op2 = SPop(&stack);     // 두번째에 들어간 연산자를 꺼냄
+			op1 = SPop(&stack); // 첫번째로 들어간 연산자를 꺼냄
+
+			switch(tok)
+			{
+			case '+':
+				SPush(&stack, op1+op2);
+				break;
+			case '-':
+				SPush(&stack, op1-op2);
+				break;
+			case '*':
+				SPush(&stack, op1*op2);
+				break;
+			case '/':
+				SPush(&stack, op1/op2);
+				break;
+			}
+		}
+	}
+	return SPop(&stack);
+}
