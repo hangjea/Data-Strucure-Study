@@ -1,0 +1,49 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "ArrayBaseStack.h"
+
+void StackInit(Stack * pstack)
+{
+	pstack->topIndex = -1; //-1은 비었다는걸 뜻함 0이면 0의 위치에 뭔가가 저장되었다고 되어서
+}
+
+int SIsEmpty(Stack * pstack)
+{
+	if(pstack->topIndex == -1) //비어있는지 확인
+		return TRUE;
+	else
+		return FALSE;
+}
+
+void SPush(Stack * pstack, Data data)
+{
+	pstack->topIndex += 1; //맨 윗부분에 하나를 증가시키고
+	pstack->stackArr[pstack->topIndex] = data; //입력받은 값 저장
+}
+
+Data SPop(Stack * pstack)
+{
+	int rIdx;
+
+	if(SIsEmpty(pstack)) //비어있으면
+	{
+		printf("Stack Memory Error!"); 
+		exit(-1); //프로세스 종료
+	}
+
+	rIdx = pstack->topIndex; //삭제할 데이터 저장
+	pstack->topIndex -= 1; //그 외 데이터 삭제
+
+	return pstack->stackArr[rIdx]; //삭제되는 데이터 반환
+}
+
+Data SPeek(Stack * pstack)
+{
+	if(SIsEmpty(pstack)) //빈데이터인지 확인
+	{
+		printf("Stack Memory Error!");
+		exit(-1);
+	}
+
+	return pstack->stackArr[pstack->topIndex]; //데이터 반환
+}
