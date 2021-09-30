@@ -1,0 +1,22 @@
+#include "PriorityQueue.h"
+#include "UsefulHeap.h"
+
+void PQueueInit(PQueue * ppq, PriorityComp pc) //우선순위 큐 초기화
+{
+	HeapInit(ppq, pc);
+}
+
+int PQIsEmpty(PQueue * ppq) //우선순위 큐가 빈 경우 
+{
+	return HIsEmpty(ppq);
+}
+
+void PEnqueue(PQueue * ppq, PQData data) //우선순위 큐에 데이터 저장한다. 매개변수 data로 전달된 값을 저장한다.
+{
+	HInsert(ppq, data);
+}
+
+PQData PDequeue(PQueue * ppq) //우선순위가 가장 높은 데이터를 삭제
+{
+	return HDelete(ppq);
+}
