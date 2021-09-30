@@ -1,0 +1,82 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "Table2.h"
+#include "DLinkedList.h"
+
+void TBLInit(Table * pt, HashFunc * f)
+{
+	int i;
+
+	for(i=0; i<MAX_TBL; i++)
+		ListInit(&(pt->tbl[i]));
+
+	pt->hf = f;
+}
+
+void TBLInsert(Table * pt, Key k, Value v)
+{
+	int hv = pt->hf(k);//hf 는 포인터 변수 k를 해쉬함수로 보내고 그 값을 hv에 저장
+	Slot ns = {k, v}; //키랑 내용을 저장
+	
+	if(TBLSearch(pt, k) != NULL)       // 키가 중복되었다면
+	{
+		printf("키 중복 오류 발생 \n");
+		return;
+	}
+	else
+	{
+		LInsert(&(pt->tbl[hv]), ns); // 리스트에 tbl의 해쉬값이 되어 있는 곳에 ns의 값 저장
+	}
+}
+
+Value TBLDelete(Table * pt, Key k)
+{
+	int hv = pt->hf(k);
+	Slot cSlot;
+
+	if(LFirst(&(pt->tbl[hv]), &cSlot))
+	{
+		if(cSlot.key == k) //찾고 있는 값이랑 맞으면
+		{
+			LRemove(&(pt->tbl[hv]));  //리스트에 있는 값 삭제
+			return cSlot.val; // 저장되어 있는 값을 반환
+		}
+		else
+		{
+			while(LNext(&(pt->tbl[hv]), &cSlot)) //한칸씩 이동
+			{
+				if(cSlot.key == k) //키가 맞으면
+				{
+					LRemove(&(pt->tbl[hv])); //반복
+					return cSlot.val;
+				}
+			}
+		}
+	}
+
+	return NULL; //삭제 대상이 존재하지 않을 경우
+}
+
+Value TBLSearch(Table * pt, Key k)
+{
+	int hv = pt->hf(k); //함수 포인터를 불러와서 키를 해쉬함수로 해쉬값 만들어서 넣음
+	Slot cSlot;
+
+	if(LFirst(&(pt->tbl[hv]), &cSlot))
+	{
+		if(cSlot.key == k)
+		{
+			return cSlot.val; //찾아서 반환
+		}
+		else
+		{
+			while(LNext(&(pt->tbl[hv]), &cSlot)) //리스트를 다음으로 이동
+			{
+				if(cSlot.key == k)
+					return cSlot.val;
+			}
+		}
+	}
+
+	return NULL; //삭제 대상이 존재하지 않을 경우
+}
