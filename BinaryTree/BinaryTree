@@ -1,0 +1,48 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include "BinaryTree.h"
+
+BTreeNode * MakeBTreeNode(void)
+{
+	BTreeNode * nd = (BTreeNode*)malloc(sizeof(BTreeNode));
+
+	nd->left = NULL;
+	nd->right = NULL;
+	return nd;
+}
+
+BTData GetData(BTreeNode * bt)
+{
+	return bt->data;
+}
+
+void SetData(BTreeNode * bt, BTData data)
+{
+	bt->data = data;
+}
+
+BTreeNode * GetLeftSubTree(BTreeNode * bt)
+{
+	return bt->left;
+}
+
+BTreeNode * GetRightSubTree(BTreeNode * bt)
+{
+	return bt->right;
+}
+
+void MakeLeftSubTree(BTreeNode * main, BTreeNode * sub)
+{
+	if(main->left != NULL) //존재한다면
+		free(main->left); //그 기존 노드를 삭제하고 공간 만듬
+
+	main->left = sub;
+}
+
+void MakeRightSubTree(BTreeNode * main, BTreeNode * sub)
+{
+	if(main->right != NULL) //채울려는 곳에 존재하면
+		free(main->right); // 존재하는걸 지우고 공간 창출
+
+	main->right = sub;
+}
