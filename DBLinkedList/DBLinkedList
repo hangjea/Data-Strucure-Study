@@ -1,0 +1,62 @@
+#include <stdlib.h>
+#include <stdio.h>
+#include "DBLinkedList.h"
+
+void ListInit(List* plist) {
+	plist->head = (Node*)malloc(sizeof(Node));
+	plist->tail = (Node*)malloc(sizeof(Node));
+	plist->head->prev = NULL;
+	plist->head->next = plist->tail;
+	plist->tail->next = NULL;
+	plist->tail->prev = plist->head;
+	
+	plist->numofdata = 0;
+}
+void LInsert(List* plist, Data data)
+{
+	Node* newnode = malloc(sizeof(Node));
+	newnode->data = data; //데이터 집어넣기
+
+	newnode->prev = plist->tail->prev; //새노드가 왼쪽 즉 헤드쪽을 가르키게 함
+	plist->tail->prev->next = newnode; // 리스트의 꼬리에서 바로 앞에 있는 노드가 오른쪽에 뉴노드를 둠
+	newnode->next = plist->tail; // 뉴노드 오른쪽에에 꼬리를 둠
+	plist->tail->prev = newnode; // 뉴노드의 왼쪽에 둠
+
+	
+
+	(plist->numofdata)++;
+}
+
+int LFirst(List* plist, Data* pdata)
+{
+	if (plist->head->next == plist->tail) //가르키는게 없으면
+		return FALSE;
+	plist->cur = plist->head->next; //cur이 첫번째를 가르키게 함
+	*pdata = plist->cur->data;//cur에 저장되어 있는 data를 저장
+	return TRUE;
+}
+int LNext(List* plist, Data* pdata)
+{
+	if (plist->cur->next == plist->tail) //cur이 가르키는 게 null이면
+		return FALSE; //-1으로 반환하고 함수 종료
+	plist->cur = plist->cur->next; // cur를 오른쪽으로 이동
+	*pdata = plist->cur->data;//pdata에 cur가 가르키는 data 값 저장
+	return TRUE;
+}
+int LRemove(List* plist)
+{
+	Node* rpos = plist->cur;
+	Data remv = rpos->data;
+
+	plist->cur->prev->next = plist->cur->next;
+	plist->cur->next->prev = plist->cur->prev;
+
+	plist->cur = plist->cur->prev;    // cur의 위치를 재조정
+	free(rpos);
+	(plist->numofdata)--;
+	return remv;
+}
+int LCount(List* plist)
+{
+	return plist->numofdata;
+}
